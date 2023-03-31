@@ -25,41 +25,7 @@ from launch_ros.descriptions import ComposableNode
 
 
 def launch_setup(context, *args, **kwargs):    
-    pointcloud_to_laserscan_node = ComposableNode(
-            package="pointcloud_to_laserscan",
-            plugin="pointcloud_to_laserscan::PointCloudToLaserScanNode",
-            name="pointcloud_to_laserscan_node",
-            remappings=[
-                ("~/input/pointcloud", LaunchConfiguration("input/pointcloud")),
-                ("~/output/laserscan", LaunchConfiguration("output/laserscan")),
-                ("~/output/pointcloud", LaunchConfiguration("output/pointcloud")),
-                ("~/output/ray", LaunchConfiguration("output/ray")),
-                ("~/output/stixel", LaunchConfiguration("output/stixel")),
-            ],
-            parameters=[
-                {
-                    "target_frame": "laser",  # Leave disabled to output scan in pointcloud frame
-                    "transform_tolerance": 0.1,
-                    "min_height": -0.1,
-                    "max_height": 0.1,
-                    "angle_min": -2.356195,
-                    "angle_max": 2.356195,
-                    "angle_increment": 0.004363,
-                    "scan_time": 0.025,
-                    "range_min": 0.1,
-                    "range_max": 30.0,
-                    "use_inf": True,
-                    "inf_epsilon": 1.0,
-                    # Concurrency level, affects number of pointclouds queued for processing
-                    # and number of threads used
-                    # 0 : Detect number of cores
-                    # 1 : Single threaded
-                    # 2->inf : Parallelism level
-                    "concurrency_level": 1,
-                }
-            ],
-            extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
-        )
+    #TODO: add urg_node for non-simulator mode
     
     container = ComposableNodeContainer(
         name=LaunchConfiguration("container_name"),
@@ -78,7 +44,7 @@ def launch_setup(context, *args, **kwargs):
     )
 
     component_loader = LoadComposableNodes(
-        composable_node_descriptions=[pointcloud_to_laserscan_node],
+        composable_node_descriptions=[],
         target_container=target_container,
     )
 
