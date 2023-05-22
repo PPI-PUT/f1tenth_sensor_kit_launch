@@ -24,21 +24,6 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def launch_setup(context, *args, **kwargs):
-    # Lidar
-    lidar_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            launch_file_path=PathJoinSubstitution([
-                FindPackageShare('f1tenth_sensor_kit_launch'), 'launch', 'lidar.launch.py'
-            ]),
-        ),
-        launch_arguments={
-            "container_name": LaunchConfiguration("container_name"),
-            "use_laser_container": LaunchConfiguration("use_laser_container"),
-            "use_multithread": LaunchConfiguration("use_multithread"),
-            "use_intra_process": LaunchConfiguration("use_intra_process")
-        }.items()
-    )
-
     # IMU
     imu_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -47,7 +32,7 @@ def launch_setup(context, *args, **kwargs):
             ]),
         )
     )
-    
+
     # Vehicle Velocity Converter
     vehicle_velocity_converter_launch = IncludeLaunchDescription(
         FrontendLaunchDescriptionSource(
@@ -56,28 +41,42 @@ def launch_setup(context, *args, **kwargs):
             ]),
         ),
         launch_arguments={
-            'input_vehicle_velocity_topic': "/vehicle/status/velocity_status",
-            'output_twist_with_covariance': "/sensing/vehicle_velocity_converter/twist_with_covariance",
+            'input_vehicle_velocity_topic': '/vehicle/status/velocity_status',
+            'output_twist_with_covariance': '/sensing/vehicle_velocity_converter/twist_with_covariance',
         }.items()
     )
-    
+
+    # Remote controller
+    remote_controller_launch = IncludeLaunchDescription(
+        FrontendLaunchDescriptionSource(
+            launch_file_path=PathJoinSubstitution([
+                FindPackageShare('joy_controller'), 'launch', 'joy_controller.launch.xml'
+            ]),
+        ),
+        launch_arguments={
+            'config_file': PathJoinSubstitution([
+                FindPackageShare('f1tenth_sensor_kit_launch'), 'config', 'joy/joy_controller.param.yaml'
+            ]),
+            'input_joy': '/sensing/joy',
+            'joy_type': 'P65',
+            'input_odometry': '/localization/kinematic_state',
+        }.items()
+    )
+
     return [
-        lidar_launch,
         imu_launch,
         vehicle_velocity_converter_launch,
+        remote_controller_launch,
     ]
 
 
 def generate_launch_description():
-    def add_launch_arg(name: str, default_value=None):
-        return DeclareLaunchArgument(name, default_value=default_value)
-    
     declared_arguments = []
 
-    declared_arguments.append(add_launch_arg("container_name", "hokuyo_node_container"))
-    declared_arguments.append(add_launch_arg("use_laser_container", "false"))
-    declared_arguments.append(add_launch_arg("use_multithread", "false"))
-    declared_arguments.append(add_launch_arg("use_intra_process", "false"))
+    def add_launch_arg(name: str, default_value: str = None):
+        declared_arguments.append(
+            DeclareLaunchArgument(name, default_value=default_value)
+        )
 
     return LaunchDescription([
         *declared_arguments,

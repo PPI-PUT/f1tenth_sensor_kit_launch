@@ -9,10 +9,8 @@
 
   <buildtool_depend>ament_cmake_auto</buildtool_depend>
 
-  <exec_depend>gnss_poser</exec_depend>
   <exec_depend>imu_corrector</exec_depend>
-  <exec_depend>pointcloud_preprocessor</exec_depend>
-  <exec_depend>pointcloud_to_laserscan</exec_depend>
+  <exec_depend>joy_controller</exec_depend>
   <exec_depend>vehicle_velocity_converter</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>

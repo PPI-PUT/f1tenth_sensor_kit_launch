@@ -24,7 +24,7 @@
     <xacro:property name="calibration" value="${xacro.load_yaml('$(arg config_dir)/sensor_kit_calibration.yaml')}"/>
 
     <!-- lidar -->
-    <joint name="laser_joint" type="fixed">
+    <!-- <joint name="laser_joint" type="fixed">
       <origin
         xyz="${calibration['sensor_kit_base_link']['laser']['x']}
              ${calibration['sensor_kit_base_link']['laser']['y']}
@@ -37,7 +37,7 @@
       <child link="laser"/>
     </joint>
 
-    <link name="laser"/>
+    <link name="laser"/> -->
 
     <!-- camera -->
     <joint name="camera_joint" type="fixed">

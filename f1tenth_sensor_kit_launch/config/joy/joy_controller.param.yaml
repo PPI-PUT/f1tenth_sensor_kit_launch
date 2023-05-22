@@ -1,0 +1,14 @@
+/**:
+  ros__parameters:
+    update_rate: 10.0
+    accel_ratio: 0.5
+    brake_ratio: 0.8
+    steer_ratio: 1.0
+    steering_angle_velocity: 1.0
+    accel_sensitivity: 1.0
+    brake_sensitivity: 1.0
+    control_command:
+      velocity_gain: 0.0
+      max_forward_velocity: 20.0
+      max_backward_velocity: 3.0
+      backward_accel_ratio: 1.0

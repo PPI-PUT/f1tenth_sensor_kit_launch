@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:macro name="laser_macro" params="parent x y z roll pitch yaw">
+
+    <xacro:arg name="gpu" default="false"/>
+    <xacro:arg name="vehicle_info_dir" default="$(find f1tenth_vehicle_description)/config"/>
+
+    <link name="${parent}"/>
+    <xacro:property name="vehicle_info" value="${xacro.load_yaml('$(arg vehicle_info_dir)/vehicle_info.param.yaml')}"/>
+
+    <xacro:property name="laser" default="laser"/>
+
+    <joint name="laser_joint" type="fixed">
+      <origin
+        xyz="${x}
+             ${y}
+             ${z + vehicle_info['/**']['ros__parameters']['wheel_radius']}"
+        rpy="${roll}
+             ${pitch}
+             ${yaw}"
+      />
+      <parent link="${parent}"/>
+      <child link="${laser}"/>
+    </joint>
+    <link name="${laser}">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </link>
+    
+
+  </xacro:macro>
+</robot>
